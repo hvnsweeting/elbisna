@@ -1,0 +1,14 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: Remove apt key
+      apt_key:
+        # url: 'https://pkg.jenkins.io/debian/jenkins.io.key'
+        id: D50582E6
+        state: absent
+    - name: Remove apt repo
+      apt_repository:
+        repo: 'deb http://pkg.jenkins.io/debian-stable binary/'
+        state: absent
+    - name: Remove Jenkins 2
+      apt: name=jenkins state=absent

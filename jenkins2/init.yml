@@ -1,0 +1,14 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: Add apt key
+      apt_key:
+        url: 'https://pkg.jenkins.io/debian/jenkins.io.key'
+        state: present
+    - name: Add apt repo
+      apt_repository:
+        repo: 'deb http://pkg.jenkins.io/debian-stable binary/'
+        state: present
+    - name: install Jenkins 2
+      apt: name=jenkins state=present
+
