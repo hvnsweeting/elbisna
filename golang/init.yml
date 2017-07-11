@@ -1,0 +1,22 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: Download Golang binary
+      get_url:
+        url: 'https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz'
+        dest: /usr/local/go1.8.3.linux-amd64.tar.gz
+        checksum: md5:f412132cdce75d41e3bcb0d68a33fc66
+      register: go_tarball
+    - name: Extract Golang binary tarball
+      unarchive:
+        src: /usr/local/go1.8.3.linux-amd64.tar.gz
+        dest: /usr/local/
+        remote_src: yes
+      when: go_tarball|changed
+
+    - name: Adding Golang bin to path
+      lineinfile:
+        dest: /etc/profile
+        line: export PATH=$PATH:/usr/local/go/bin
+    - name: Check golang version
+      command: /usr/local/go/bin/go version
