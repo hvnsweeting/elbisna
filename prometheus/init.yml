@@ -1,0 +1,49 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: Download Prometheus binary
+      get_url:
+        url: 'https://github.com/prometheus/prometheus/releases/download/v1.7.1/prometheus-1.7.1.linux-amd64.tar.gz'
+        dest: /usr/local/prometheus-1.7.1.linux-amd64.tar.gz
+        checksum: sha256:4779d5cf08c50ed368a57b102ab3895e5e830d6b355ca4bfecf718a034a164e0
+      register: prometheus_tarball
+    - name: Extract Prometheus binary tarball
+      unarchive:
+        src: /usr/local/prometheus-1.7.1.linux-amd64.tar.gz
+        dest: /usr/local/
+        remote_src: yes
+    - name: Create symlink in local bin for Prometheus
+      file:
+        src: /usr/local/prometheus-1.7.1.linux-amd64/prometheus
+        dest: /usr/local/bin/prometheus
+        state: link
+    - name: Render Prometheus config file
+      template:
+        src: prometheus.j2
+        dest: /etc/prometheus.yml
+        owner: root
+        group: root
+        mode: 0644
+    - name: Create prometheus user
+      user:
+        name: prometheus
+        shell: /bin/sh
+    - name: Create prometheus data dir
+      file:
+        path: /var/lib/prometheus
+        state: directory
+        mode: 0700
+        owner: prometheus
+        group: prometheus
+    - name: Prom Systemd
+      template:
+        src: systemd.j2
+        dest: /lib/systemd/system/prometheus.service
+        owner: root
+        group: root
+        mode: 0644
+    - name: Prometheus service
+      systemd:
+        name: prometheus
+        enabled: yes
+        state: started

@@ -1,0 +1,31 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: Download Prometheus node exporter binary
+      get_url:
+        url: 'https://github.com/prometheus/node_exporter/releases/download/v0.14.0/node_exporter-0.14.0.linux-amd64.tar.gz'
+        dest: /usr/local/node_exporter-0.14.0.linux-amd64.tar.gz
+        checksum: md5:ee8761d8233ae5d3f99cc0edc758cd83
+      register: prometheus_exporter_tarball
+    - name: Extract Prometheus exporter binary tarball
+      unarchive:
+        src: /usr/local/node_exporter-0.14.0.linux-amd64.tar.gz
+        dest: /usr/local/
+        remote_src: yes
+    - name: Create symlink in local bin for Prometheus node exporter
+      file:
+        src: /usr/local/node_exporter-0.14.0.linux-amd64/node_exporter
+        dest: /usr/local/bin/node_exporter
+        state: link
+    - name: Node export Systemd
+      template:
+        src: systemd.j2
+        dest: /lib/systemd/system/node-exporter.service
+        owner: root
+        group: root
+        mode: 0644
+    - name: Node export service
+      service:
+        name: node-exporter
+        enabled: yes
+        state: started

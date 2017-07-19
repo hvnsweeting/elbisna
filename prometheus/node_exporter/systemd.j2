@@ -1,0 +1,11 @@
+[Unit]
+Description=Prom node exporter
+
+[Service]
+ExecStart=/usr/local/bin/node_exporter -web.listen-address=127.0.0.1:9100
+IgnoreSIGPIPE=false
+KillMode=process
+User=nobody
+
+[Install]
+WantedBy=multi-user.target
