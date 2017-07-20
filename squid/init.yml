@@ -1,0 +1,21 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: install Squid
+      apt:
+        name: squid
+        state: present
+    - name: Render Squid config file
+      template:
+        src: squid.j2
+        dest: /etc/squid/squid.conf
+        owner: root
+        group: root
+        mode: 0644
+    - name: Squid service
+      service:
+        name: squid
+        state: started
+        enabled: yes
+# TODO restart when config change
+
