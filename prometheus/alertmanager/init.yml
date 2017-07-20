@@ -1,0 +1,49 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: Download Prometheus Alert manager
+      get_url:
+        url: 'https://github.com/prometheus/alertmanager/releases/download/v0.7.1/alertmanager-0.7.1.linux-amd64.tar.gz'
+        dest: /usr/local/alertmanager-0.7.1.linux-amd64.tar.gz
+        checksum: md5:3164e0c3fc9e83483145dcd15f0d33f1
+      register: prometheus_alertmanager_tarball
+    - name: Extract Prometheus alertmanager tarball
+      unarchive:
+        src: /usr/local/alertmanager-0.7.1.linux-amd64.tar.gz
+        dest: /usr/local/
+        remote_src: yes
+    - name: Create symlink in local bin for Prometheus alertmanager
+      file:
+        src: /usr/local/alertmanager-0.7.1.linux-amd64/alertmanager
+        dest: /usr/local/bin/alertmanager
+        state: link
+    - name: Alertmanager Systemd
+      template:
+        src: systemd.j2
+        dest: /lib/systemd/system/alertmanager.service
+        owner: root
+        group: root
+        mode: 0644
+    - name: Render alertmanager config file
+      template:
+        src: alertmanager.j2
+        dest: /etc/alertmanager.yml
+        owner: root
+        group: root
+        mode: 0644
+    - name: Create alertmanager user
+      user:
+        name: alertmanager
+        shell: /bin/sh
+    - name: Create alertmanager data dir
+      file:
+        path: /var/lib/alertmanager
+        state: directory
+        mode: 0700
+        owner: alertmanager
+        group: alertmanager
+    - name: Alertmanager service
+      service:
+        name: alertmanager
+        enabled: yes
+        state: restarted
