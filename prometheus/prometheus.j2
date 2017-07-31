@@ -45,3 +45,11 @@ scrape_configs:
       - targets: ['localhost:8080']
         labels:
           group: 'production'
+
+  - job_name: 'Graphite exporter'
+
+    scrape_interval: 30s
+    static_configs:
+      - targets: ['localhost:9108']
+        labels:
+          group: 'production'
