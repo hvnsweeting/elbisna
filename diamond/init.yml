@@ -1,0 +1,71 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: Download Graphite exporter binary
+      get_url:
+        url: 'https://github.com/prometheus/graphite_exporter/releases/download/v0.2.0/graphite_exporter-0.2.0.linux-amd64.tar.gz'
+        dest: /usr/local/graphite_exporter-0.2.0.linux-amd64.tar.gz
+        checksum: md5:c392985874c8a42ae3aba1ea59dd4dbc
+      register: graphite_exporter_tarball
+    - name: Extract Graphite exporter binary tarball
+      unarchive:
+        src: /usr/local/graphite_exporter-0.2.0.linux-amd64.tar.gz
+        dest: /usr/local/
+        remote_src: yes
+    - name: Create symlink in local bin for Graphite exporter
+      file:
+        src: /usr/local/graphite_exporter-0.2.0.linux-amd64/graphite_exporter
+        dest: /usr/local/bin/graphite_exporter
+        state: link
+    - name: Graphite exporter Systemd
+      template:
+        src: systemd.j2
+        dest: /lib/systemd/system/graphite-exporter.service
+        owner: root
+        group: root
+        mode: 0644
+    - name: Graphite exporter service
+      service:
+        name: graphite-exporter
+        enabled: yes
+        state: started
+    - name: Create virtualenv for diamond
+      # https://stackoverflow.com/questions/26402123/ansible-creating-a-virtualenv#30777607
+      command: virtualenv /usr/local/diamond -p python2 creates="/usr/local/diamond"
+    - name: Installing diamond
+      pip:
+        name: diamond
+        virtualenv: /usr/local/diamond
+    - name: Create diamond config dir
+      file:
+        path: /etc/diamond/collectors
+        state: directory
+        mode: 0755
+        owner: root
+        group: root
+    - name: Diamond config
+      template:
+        src: diamond.j2
+        dest: /etc/diamond/diamond.conf
+        owner: root
+        group: root
+        mode: 0644
+    - name: Diamond Process Resource config
+      template:
+        src: ProcessResourcesCollector.j2
+        dest: /etc/diamond/collectors/ProcessResourcesCollector.conf
+        owner: root
+        group: root
+        mode: 0644
+    - name: Diamond Systemd
+      template:
+        src: diamond_systemd.j2
+        dest: /lib/systemd/system/diamond.service
+        owner: root
+        group: root
+        mode: 0644
+    - name: Diamond service
+      service:
+        name: diamond
+        enabled: yes
+        state: started

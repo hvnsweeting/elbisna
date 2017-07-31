@@ -1,0 +1,11 @@
+[Unit]
+Description=Graphite exporter
+
+[Service]
+ExecStart=/usr/local/bin/graphite_exporter -web.listen-address=127.0.0.1:9108
+IgnoreSIGPIPE=false
+KillMode=process
+User=nobody
+
+[Install]
+WantedBy=multi-user.target

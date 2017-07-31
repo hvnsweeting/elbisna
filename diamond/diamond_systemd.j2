@@ -1,0 +1,11 @@
+[Unit]
+Description=Diamond metric collector daemon
+
+[Service]
+ExecStart=/usr/local/diamond/bin/diamond --foreground --log-stdout --skip-pidfile  --skip-fork
+IgnoreSIGPIPE=false
+KillMode=process
+User=nobody
+
+[Install]
+WantedBy=multi-user.target
