@@ -1,0 +1,14 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: Download Terraform binary
+      get_url:
+        url: 'https://releases.hashicorp.com/terraform/0.9.11/terraform_0.9.11_linux_amd64.zip'
+        dest: /usr/local/terraform_0.9.11_linux_amd64.zip
+        checksum: md5:ce36d73d0161306ca1706aaa6161c22a
+      register: terraform_archive
+    - name: Extract Terraform binary archive
+      unarchive:
+        src: /usr/local/terraform_0.9.11_linux_amd64.zip
+        dest: /usr/local/bin
+        remote_src: yes
