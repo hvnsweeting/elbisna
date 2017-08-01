@@ -1,0 +1,19 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: Download gcloud binary
+      get_url:
+        url: 'https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-164.0.0-linux-x86_64.tar.gz'
+        dest: /usr/local/google-cloud-sdk-164.0.0-linux-x86_64.tar.gz
+        checksum: md5:c9ebe63a0ed9d6db3aa2eafe4d1ecf08
+      register: gcloud_archive
+    - name: Extract gcloud binary archive
+      unarchive:
+        src: /usr/local/google-cloud-sdk-164.0.0-linux-x86_64.tar.gz
+        dest: /usr/local/
+        remote_src: yes
+    - name: Create symlink in local bin for gcloud
+      file:
+        src: /usr/local/google-cloud-sdk/bin/gcloud
+        dest: /usr/local/bin/gcloud
+        state: link
