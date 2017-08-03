@@ -1,0 +1,25 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: Add Grafana apt key
+      apt_key:
+        url: 'https://packagecloud.io/gpg.key'
+        state: present
+    - name: Add Grafana apt repo
+      apt_repository:
+        repo: 'deb https://packagecloud.io/grafana/stable/debian/ jessie main'
+        state: present
+    - name: install Grafana
+      apt:
+        name: grafana
+        state: present
+    - lineinfile:
+        path: /etc/grafana/grafana.ini
+        regexp: '^;http_addr ='
+        insertafter: '^;http_addr ='
+        line: 'http_addr = 127.0.0.1'
+    - name: Grafana service
+      service:
+        name: grafana-server
+        state: started
+        enabled: yes
