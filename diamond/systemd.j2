@@ -2,7 +2,7 @@
 Description=Graphite exporter
 
 [Service]
-ExecStart=/usr/local/bin/graphite_exporter -web.listen-address=127.0.0.1:9108
+ExecStart=/usr/local/bin/graphite_exporter -web.listen-address=127.0.0.1:9108 -graphite.listen-address=127.0.0.1:9109
 IgnoreSIGPIPE=false
 KillMode=process
 User=nobody
