@@ -3,7 +3,7 @@ Description=Prometheus Alertmanager
 
 [Service]
 WorkingDirectory=/var/lib/alertmanager
-ExecStart=/usr/local/bin/alertmanager -config.file=/etc/alertmanager.yml -web.listen-address=127.0.0.1:9093
+ExecStart=/usr/local/bin/alertmanager -config.file=/etc/alertmanager.yml -web.listen-address=127.0.0.1:9093 -mesh.listen-address=127.0.0.1:6783
 
 IgnoreSIGPIPE=false
 KillMode=process
