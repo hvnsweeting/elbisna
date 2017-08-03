@@ -1,2 +1,2 @@
 *.retry
-*.swp # vim
+.*.swp # vim
