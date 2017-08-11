@@ -1,0 +1,16 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: install OpenSMTPD
+      apt:
+        name: opensmtpd
+        state: present
+    - name: OpenSMTPD service
+      service:
+        name: opensmtpd
+        state: started
+        enabled: yes
+    - name: install mailutils
+      apt:
+        name: mailutils
+        state: present
