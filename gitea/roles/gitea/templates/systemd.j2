@@ -1,0 +1,13 @@
+[Unit]
+Description=Gitea daemon
+
+[Service]
+ExecStart=/usr/local/bin/gitea web -port=30000
+Environment=GITEA_WORK_DIR=/var/lib/gitea
+
+IgnoreSIGPIPE=false
+KillMode=process
+User=gitea
+
+[Install]
+WantedBy=multi-user.target
