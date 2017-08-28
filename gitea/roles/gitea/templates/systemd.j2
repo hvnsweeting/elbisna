@@ -5,6 +5,9 @@ Description=Gitea daemon
 ExecStart=/usr/local/bin/gitea web -port=30000
 Environment=GITEA_WORK_DIR=/var/lib/gitea
 
+# Keep here until https://github.com/go-gitea/gitea/pull/2397 merged
+WorkingDirectory=/var/lib/gitea
+
 IgnoreSIGPIPE=false
 KillMode=process
 User=gitea

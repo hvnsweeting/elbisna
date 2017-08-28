@@ -1,15 +1,15 @@
 - name: Download Gitea binary
   get_url:
-    url: 'https://dl.gitea.io/gitea/1.0.1/gitea-1.0.1-linux-amd64'
-    dest: /usr/local/gitea-1.0.1-linux-amd64
-    checksum: md5:be1cb8f648166649f8efc16a64e34135
+    url: 'https://dl.gitea.io/gitea/1.1.3/gitea-1.1.3-linux-amd64'
+    dest: /usr/local/gitea-1.1.3-linux-amd64
+    checksum: md5:92f36bfe6315eba852330de6da950590
 - name: Make sure Gitea binary executable
   file:
-    path: /usr/local/gitea-1.0.1-linux-amd64
+    path: /usr/local/gitea-1.1.3-linux-amd64
     mode: 0555
 - name: Create symlink in local bin for Gitea
   file:
-    src: /usr/local/gitea-1.0.1-linux-amd64
+    src: /usr/local/gitea-1.1.3-linux-amd64
     dest: /usr/local/bin/gitea
     state: link
 - name: Gitea Systemd
@@ -37,7 +37,7 @@
     dest: /var/lib/gitea/custom/conf/app.ini
     owner: gitea
     group: gitea
-    mode: 0644
+    mode: 0640
 - name: Gitea service
   service:
     name: gitea

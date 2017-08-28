@@ -4,10 +4,10 @@ RUN_MODE = prod
 
 [database]
 DB_TYPE  = sqlite3
-HOST     =
-NAME     =
-USER     =
-PASSWD   =
+HOST     = 
+NAME     = 
+USER     = 
+PASSWD   = 
 SSL_MODE = disable
 PATH     = /var/lib/gitea/data/gitea.db
 
@@ -15,30 +15,32 @@ PATH     = /var/lib/gitea/data/gitea.db
 ROOT = /var/lib/gitea/gitea-repositories
 
 [server]
-SSH_DOMAIN   = localhost
-HTTP_ADDR    = {{ listen_on }}
-HTTP_PORT    = 30000
-ROOT_URL     = http://localhost:30000/
-DISABLE_SSH  = false
-SSH_PORT     = 22
-OFFLINE_MODE = false
+SSH_DOMAIN       = localhost
+HTTP_PORT        = 30000
+ROOT_URL         = http://localhost:30000/
+DISABLE_SSH      = false
+SSH_PORT         = 22
+LFS_START_SERVER = false
+OFFLINE_MODE     = false
 
 [mailer]
 ENABLED = false
 
 [service]
-REGISTER_EMAIL_CONFIRM = false
-ENABLE_NOTIFY_MAIL     = false
-DISABLE_REGISTRATION   = false
-ENABLE_CAPTCHA         = false
-REQUIRE_SIGNIN_VIEW    = false
+REGISTER_EMAIL_CONFIRM     = false
+ENABLE_NOTIFY_MAIL         = false
+DISABLE_REGISTRATION       = false
+ENABLE_CAPTCHA             = false
+REQUIRE_SIGNIN_VIEW        = false
+DEFAULT_KEEP_EMAIL_PRIVATE = false
+NO_REPLY_ADDRESS           = noreply.example.org
 
 [picture]
 DISABLE_GRAVATAR        = false
 ENABLE_FEDERATED_AVATAR = false
 
 [session]
-PROVIDER_CONFIG = /var/lib/gitea/data/sessions
+PROVIDER = file
 
 [log]
 MODE      = file
@@ -47,5 +49,5 @@ ROOT_PATH = /var/lib/gitea/log
 
 [security]
 INSTALL_LOCK = true
-SECRET_KEY   = oraBXG5wKG
+SECRET_KEY   = 357A0UB47f
 
