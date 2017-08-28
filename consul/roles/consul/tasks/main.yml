@@ -1,0 +1,23 @@
+- name: Download Consul binary
+  get_url:
+    url: 'https://releases.hashicorp.com/consul/0.9.2/consul_0.9.2_linux_amd64.zip?_ga=2.126000324.899395673.1503896740-2062037958.1503896740'
+    dest: /usr/local/consul_0.9.2_linux_amd64.zip
+    checksum: md5:80d1b08ed1cd45bfac16ada36160963b
+  register: consul_archive
+- name: Extract consul
+  unarchive:
+    src: /usr/local/consul_0.9.2_linux_amd64.zip
+    dest: /usr/local/bin/
+    remote_src: yes
+- name: Consul Systemd
+  template:
+    src: systemd.j2
+    dest: /lib/systemd/system/consul.service
+    owner: root
+    group: root
+    mode: 0644
+- name: Consul service
+  service:
+    name: consul
+    enabled: yes
+    state: started

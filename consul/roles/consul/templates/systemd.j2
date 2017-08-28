@@ -1,0 +1,12 @@
+[Unit]
+Description=Consul daemon
+
+[Service]
+ExecStart=/usr/local/bin/consul agent -dev
+
+IgnoreSIGPIPE=false
+KillMode=process
+User=nobody
+
+[Install]
+WantedBy=multi-user.target
