@@ -1,0 +1,9 @@
+- name: install Redis k-v server
+  apt:
+    name: redis-server
+    state: present
+- name: redis-server service
+  service:
+    name: redis-server
+    state: started
+    enabled: yes
