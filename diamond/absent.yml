@@ -1,0 +1,37 @@
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: Graphite exporter service
+      service:
+        name: graphite-exporter
+        enabled: no
+        state: stopped
+    - name: Stop Diamond service
+      service:
+        name: diamond
+        enabled: no
+        state: stopped
+    - name: Absent graphite_exporter
+      file:
+        path: /usr/local/graphite_exporter-0.2.0.linux-amd64
+        state: absent
+    - name: Remove symlink in local bin for Graphite exporter
+      file:
+        path: /usr/local/bin/graphite_exporter
+        state: absent
+    - name: Remove Graphite exporter Systemd
+      file:
+        path: /lib/systemd/system/graphite-exporter.service
+        state: absent
+    - name: Remove virtualenv for diamond
+      file:
+        path:  /usr/local/diamond
+        state: absent
+    - name: Diamond config
+      file:
+        state: absent
+        path: /etc/diamond
+    - name: Remove Diamond Systemd
+      file:
+        path: /lib/systemd/system/diamond.service
+        state: absent
