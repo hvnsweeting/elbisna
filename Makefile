@@ -1,6 +1,6 @@
 # E.g: make ROLE=prometheus/alertmanager deploy
 deploy:
-	sudo `which ansible-playbook` -ilocalhost, -c local ${ROLE}/site.yml -vv
+	sudo -H `which ansible-playbook` -ilocalhost, -c local ${ROLE}/site.yml -vv
 
 runfile:
 	sudo `which ansible-playbook` -ilocalhost, -c local ${ROLE}.yml -vv
