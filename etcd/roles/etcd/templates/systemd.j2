@@ -1,0 +1,13 @@
+[Unit]
+Description=Etcd daemon
+
+[Service]
+ExecStart=/usr/local/bin/etcd --data-dir '/var/lib/etcd/'
+
+IgnoreSIGPIPE=false
+KillMode=process
+User=etcd
+Type=notify
+
+[Install]
+WantedBy=multi-user.target

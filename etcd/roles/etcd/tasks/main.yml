@@ -1,0 +1,48 @@
+- name: Download etcd binary
+  get_url:
+    url: 'https://storage.googleapis.com/etcd/v3.2.10/etcd-v3.2.10-linux-amd64.tar.gz'
+    dest: /usr/local/etcd-v3.2.10-linux-amd64.tar.gz
+    checksum: md5:225732990ce85b979ac57ab7877bfc6e
+  register: etcd_archive
+
+- name: Extract etcd
+  unarchive:
+    src: /usr/local/etcd-v3.2.10-linux-amd64.tar.gz
+    dest: /usr/local/
+    remote_src: yes
+
+- name: Symlink etcd binaries
+  file:
+    src: "/usr/local/etcd-v3.2.10-linux-amd64/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    state: link
+  with_items:
+    - etcd
+    - etcdctl
+
+- name: Create etcd user
+  user:
+    name: etcd
+    system: yes
+
+- name: Etcd Systemd
+  template:
+    src: systemd.j2
+    dest: /lib/systemd/system/etcd.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Etcd data dir
+  file:
+    path: /var/lib/etcd
+    owner: etcd
+    group: etcd
+    mode: 0755
+    state: directory
+
+- name: etcd service
+  service:
+    name: etcd
+    enabled: yes
+    state: started
